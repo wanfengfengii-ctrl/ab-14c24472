@@ -1,0 +1,33 @@
+# 寄存器加权混合复核台 —— 纯前端静态应用
+#
+# 常规启动（宿主机端口可用 HOST_PORT 配置，默认 8080）：
+#   HOST_PORT=9090 docker compose up --build
+#
+# 一次性复核（运行单元测试、静态构建、HTTP 冒烟，自行退出并以退出码报告）：
+#   docker compose --profile verify run --rm --build verify
+
+services:
+  web:
+    build:
+      context: .
+      target: runtime
+    image: modular-witness-audit-console:latest
+    ports:
+      # 宿主机端口可通过环境变量 HOST_PORT 配置
+      - "${HOST_PORT:-8080}:80"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 3s
+    restart: unless-stopped
+
+  verify:
+    # 一次性服务：跑完测试/构建/HTTP 冒烟即退出，退出码即报告结果
+    profiles: ["verify"]
+    build:
+      context: .
+      target: verify
+    image: modular-witness-audit-console-verify:latest
+    restart: "no"

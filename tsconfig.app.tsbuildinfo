@@ -1,0 +1,1 @@
+{"root":["./src/App.tsx","./src/main.tsx","./src/perf.test.ts","./src/components/ErrorPanel.tsx","./src/components/ImportPanel.tsx","./src/components/MatrixEditor.tsx","./src/components/ParamBar.tsx","./src/components/VerdictPanel.tsx","./src/components/errorCells.ts","./src/solver/parse.ts","./src/solver/solve.test.ts","./src/solver/solve.ts"],"version":"5.9.3"}

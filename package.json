@@ -1,0 +1,26 @@
+{
+  "name": "modular-witness-audit-console",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "纯前端模 2^k 线性同余方程组复核台：精确计数与字典序最小完整参数见证",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "verify:smoke": "node scripts/smoke.mjs"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.3",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.10",
+    "vitest": "^2.1.5"
+  }
+}
