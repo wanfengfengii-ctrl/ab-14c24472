@@ -1,0 +1,33 @@
+# 标定记录复核台 — 编排
+#
+# 可配置宿主机端口：
+#   HOST_PORT=9090 docker compose up -d app      # 默认 8080
+#
+# 一次性复核（单元测试 + 生产构建 + HTTP 冒烟，自动退出，退出码报告成败）：
+#   docker compose build verify && docker compose run --rm verify
+#   退出码：0 成功，非 0 失败（verify 自身临时托管 dist 做冒烟，不依赖 app）
+
+services:
+  app:
+    build:
+      context: .
+      target: app
+    image: calibration-review-console:app
+    ports:
+      - "${HOST_PORT:-8080}:80"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/healthz"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 3s
+    restart: unless-stopped
+
+  verify:
+    build:
+      context: .
+      target: verify
+    image: calibration-review-console:verify
+    # 一次性：测试 → 构建 → 在容器内临时托管 dist → HTTP 冒烟 → 退出。
+    # 不挂载、不依赖业务后端或 app 服务。
+    command: ["node", "scripts/verify.mjs"]
